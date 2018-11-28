@@ -6,7 +6,7 @@
 [![dependencies Status](https://david-dm.org/tilfin/stream-utils/status.svg)](https://david-dm.org/tilfin/stream-utils)
 [![Build Status](https://travis-ci.org/tilfin/stream-utils.svg?branch=master)](https://travis-ci.org/tilfin/stream-utils)
 
-Instead of readArray, map of [event-stream](https://github.com/dominictarr/event-stream)
+Instead of readArray, map, writeArray of [event-stream](https://github.com/dominictarr/event-stream)
 
 ## Install
 
@@ -32,6 +32,14 @@ Create a transform stream from an asynchronous function.
 
 - **func** `<Function|AsyncFunction>` - `function(item, callback) { ... }` or `async function(item) { ... }`
 
+### StreamUtils.writeArray
+
+Create a writable object stream to callback all of written items.
+
+**StreamUtils.writeArray(callback)**
+
+- **callback** `<Function>` - `function(err, values) { ... }`
+
 ### An example
 
 ```js
@@ -55,20 +63,16 @@ const twiceStream = StreamUtils.map(async function (num) {
 });
  */
 
+const arrayWriter = StreamUtils.writeArray(function (err, values) {
+  console.log(values)
+});
+
 arrayReader.pipe(twiceStream);
-twiceStream.on('data', item => {
-  console.log(item)
-});
-twiceStream.on('end', () => {
-  console.log('END')
-});
+twiceStream.pipe(arrayWriter);
 ```
 
 #### Result
 
 ```
-2
-4
-6
-END
+[ 2, 4, 6 ]
 ```
