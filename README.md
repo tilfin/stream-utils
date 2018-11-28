@@ -1,4 +1,10 @@
-# stream-utils
+# @tilfin/stream-utils
+
+[![npm](https://img.shields.io/npm/v/@tilfin/stream-utils.svg)](https://www.npmjs.com/package/@tilfin/stream-utils)
+[![Node](https://img.shields.io/node/v/@tilfin/stream-utils.svg)]()
+[![License](https://img.shields.io/github/license/tilfin/stream-utils.svg)]()
+[![dependencies Status](https://david-dm.org/tilfin/stream-utils/status.svg)](https://david-dm.org/tilfin/stream-utils)
+[![Build Status](https://travis-ci.org/tilfin/stream-utils.svg?branch=master)](https://travis-ci.org/tilfin/stream-utils)
 
 Instead of readArray, map of [event-stream](https://github.com/dominictarr/event-stream)
 
