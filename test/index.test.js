@@ -54,6 +54,19 @@ describe('StreamUtils', () => {
       })
     })
   })
+
+  describe('#writeArray', () => {
+    it('returns all of written items', done => {
+      const ARRAY = [1, 'B', { foo: 'bar' }];
+
+      const arrayReader = StreamUtils.readArray(ARRAY.concat());
+      const arrayWriter = StreamUtils.writeArray(function (err, values) {
+        assert.deepEqual(values, ARRAY);
+        done();
+      });
+      arrayReader.pipe(arrayWriter);
+    })
+  })
 })
 
 // Only test when Node version supports async/await
