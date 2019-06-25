@@ -30,7 +30,8 @@ Create a transform stream from an asynchronous function.
 
 **StreamUtils.map(func)**
 
-- **func** `<Function|AsyncFunction>` - `function(item, callback) { ... }` or `async function(item) { ... }`
+- **func** `<Function|AsyncFunction>` - `function(item, callback) { ... }` or `async function(item, ctx) { ... }`
+- Use `ctx` as `this` of normal function.
 
 ### StreamUtils.writeArray
 
@@ -46,6 +47,18 @@ Create a writable object stream to callback all of written items.
 const StreamUtils = require('@tilfin/stream-utils')
 
 const arrayReader = StreamUtils.readArray([1, 2, 3]);
+const oddStream = StreamUtils.map(function (num, cb) {
+  if (num % 2) {
+    cb(null, num)
+  } else {
+    cb(null)
+  }
+});
+const addCopyStream = StreamUtils.map(function (num, cb) {
+  this.push(num)
+  this.push(num)
+  cb()
+});
 const twiceStream = StreamUtils.map(function (num, cb) {
   if (typeof num === 'number') {
     cb(null, num * 2)
@@ -54,6 +67,13 @@ const twiceStream = StreamUtils.map(function (num, cb) {
   }
 });
 /* Async
+const oddStream = StreamUtils.map(async function (num) {
+  if (num % 2) return num
+});
+const addCopyStream = StreamUtils.map(async function (num, ctx) {
+  ctx.push(num)
+  ctx.push(num)
+});
 const twiceStream = StreamUtils.map(async function (num) {
   if (typeof num === 'number') {
     return num * 2;
@@ -67,12 +87,15 @@ const arrayWriter = StreamUtils.writeArray(function (err, values) {
   console.log(values)
 });
 
-arrayReader.pipe(twiceStream);
-twiceStream.pipe(arrayWriter);
+arrayReader
+  .pipe(oddStream)       // => [1, 3]
+  .pipe(addCopyStream) // => [1, 1, 3, 3]
+  .pipe(twiceStream)     // => [2, 2, 6, 6]
+  .pipe(arrayWriter);
 ```
 
 #### Result
 
 ```
-[ 2, 4, 6 ]
+[2, 2, 6, 6]
 ```
