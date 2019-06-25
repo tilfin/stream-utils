@@ -1,6 +1,6 @@
 {
   "name": "@tilfin/stream-utils",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Stream utilities provides readArray, map",
   "main": "index.js",
   "scripts": {
